@@ -6,6 +6,7 @@ import numpy as np
 from scipy import interpolate
 import sncosmo
 
+
 class Lightcurve(object):
     """A lightcurve using `sncosmo`"""
     def __init__(self, source, peak_abs_mag, z, t0, skycoord,
@@ -14,7 +15,7 @@ class Lightcurve(object):
                  magsys='ab', **extra_model_parameters):
         """
         Lightcurve properties
-        
+
         Parameters
         ----------
         source : str or `sncosmo.TimeSeriesSource`
@@ -156,11 +157,11 @@ _dhawan_flux_filename = pkg_resources.resource_filename(
 )
 _dhawan_data = np.loadtxt(_dhawan_flux_filename, skiprows=3)
 _dhawan_waves = _dhawan_data.T[0] * u.AA
-_dhawan_fluxes = _dhawan_data[:, 1:].T * u.erg/(u.s*u.cm**2*u.AA)
+_dhawan_fluxes = _dhawan_data[:, 1:].T * u.erg / (u.s*u.cm**2*u.AA)
 _T_i = 0.25
 _T_f = 15.25
 _N_t = 30
-_D_t = (_T_f - _T_i)/_N_t
+_D_t = (_T_f - _T_i) / _N_t
 _dhawan_phases = [_T_i + _D_t*(n + 0.5) for n in range(30)] * u.day
 dhawan_at2017gfo_source = sncosmo.TimeSeriesSource(
     _dhawan_phases.value, _dhawan_waves.value, _dhawan_fluxes.value,
@@ -190,8 +191,8 @@ class DhawanLightcurve(Lightcurve):
         except ValueError:
             args = (
                 dhawan_at2017gfo_source, -15.7, 0.01, 0.,
-                #coordinates.SkyCoord(('13:09:47.0', '-23:23:04.00'), unit=(u.hour, u.deg))
-                coordinates.SkyCoord('02:42:40.771','-00:00:47.84',unit=(u.hour,u.deg))
+                coordinates.SkyCoord('02:42:40.771', '-00:00:47.84',
+                                     unit=(u.hour, u.deg))
             )
             kwargs = dict(ebv=0., delta_t_minus=-2., delta_t_plus=12.)
         super().__init__(*args, **kwargs)

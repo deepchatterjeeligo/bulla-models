@@ -36,7 +36,7 @@ setup(
         "Topic :: Scientific/Engineering :: Physics"
     ],
     include_package_data=True,
-    #namespace_packages=['kncosmo'],
+    packages=find_packages(),
     install_requires=[
         'astropy',
         "importlib-resources;python_version<'3.7'",
@@ -45,7 +45,7 @@ setup(
         'pandas',
     ],
     python_requires='>=3.6',
-    entry_points = {
+    entry_points={
         'console_scripts': [
             'kncosmo_extract_data=kn_cosmo.utils:extract_data',
         ]
