@@ -1,0 +1,4 @@
+[submodule "kilonova_models"]
+	path = kilonova_models
+	url = https://github.com/mbulla/kilonova_models.git
+	branch = master
