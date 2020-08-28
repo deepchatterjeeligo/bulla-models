@@ -44,6 +44,8 @@ setup(
         'numpy',
         'pandas',
     ],
+    tests_require=['pytest'],
+    setup_requires=['pytest-runner'],
     python_requires='>=3.6',
     entry_points={
         'console_scripts': [

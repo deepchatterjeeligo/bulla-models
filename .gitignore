@@ -1,6 +1,9 @@
+*pyc
 *egg-info
 *.swp
 *.bak
 *.eggs
 *~
-*/__pycache__
+**/__pycache__
+kn_cosmo/data/sed*txt
+doc/.ipynb_checkpoints/

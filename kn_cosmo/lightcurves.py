@@ -189,10 +189,8 @@ class DhawanLightcurve(Lightcurve):
         try:
             source, *args = args
         except ValueError:
-            args = (
-                dhawan_at2017gfo_source, -15.7, 0.01, 0.,
-                coordinates.SkyCoord('02:42:40.771', '-00:00:47.84',
-                                     unit=(u.hour, u.deg))
-            )
+            source = dhawan_at2017gfo_source
+            args = (-15.7, 0.01, 0., coordinates.SkyCoord(
+                '02:42:40.771', '-00:00:47.84', unit=(u.hour, u.deg)))
             kwargs = dict(ebv=0., delta_t_minus=-2., delta_t_plus=12.)
-        super().__init__(*args, **kwargs)
+        super().__init__(source, *args, **kwargs)
