@@ -1,1 +1,2 @@
 include kn_cosmo/kn_cosmo/data/best-fit-AT-2017-gfo.txt
+include kn_cosmo/kn_cosmo/tests/data/nph1.0e+06_mej0.01_phi15_T3.0e+03.txt
