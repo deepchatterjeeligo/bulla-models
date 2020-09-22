@@ -1,7 +1,11 @@
 """Lightcurve models"""
+import h5py
 import pkg_resources
 
-from astropy import cosmology, coordinates, units as u
+from astropy import (
+    cosmology, constants as const, coordinates,
+    units as u
+)
 import numpy as np
 from scipy import interpolate
 import sncosmo
@@ -190,6 +194,56 @@ class DhawanLightcurve(Lightcurve):
             source, *args = args
         except ValueError:
             source = dhawan_at2017gfo_source
+            args = (-15.7, 0.01, 0., coordinates.SkyCoord(
+                '02:42:40.771', '-00:00:47.84', unit=(u.hour, u.deg)))
+            kwargs = dict(ebv=0., delta_t_minus=-2., delta_t_plus=12.)
+        super().__init__(source, *args, **kwargs)
+
+
+_kasen_flux_filename = pkg_resources.resource_filename(
+    __name__, 'data/kasen_knova_d1_n10_m0.040_vk0.03_fd1.0_Xlan1e-4.0.h5'
+)
+_kasen_data = h5py.File(_kasen_flux_filename, "r")
+_kasen_nu = np.array(_kasen_data['nu'], dtype='d') * u.Hz
+_kasen_lam = (const.c / _kasen_nu).to('angstrom')
+# wavelength values are decreasing, reverse
+_kasen_lam = np.flipud(_kasen_lam)
+_L_nu = np.array(_kasen_data['Lnu'], dtype='d') * u.erg/u.s/u.Hz
+_L_lam = _L_nu*_kasen_nu**2.0 / const.c
+# flux at 10 pc
+_scaling_distance = 10 * u.pc
+_F_lam = (
+    _L_lam / (4 * np.pi * _scaling_distance**2)
+).to('erg / (s * angstrom * cm^2)')
+_F_lam = np.fliplr(_F_lam)
+_kasen_phases = np.array(_kasen_data['time']) / 3600.0 / 24.0 * u.day
+kasen_at2017gfo_source = sncosmo.TimeSeriesSource(
+    _kasen_phases.value, _kasen_lam.value, _F_lam.value,
+    zero_before=True
+)
+"""Kasen time series source at 10 pc"""
+
+
+class KasenLightCurve(Lightcurve):
+    """Lightcurve model based on Kasen et. al. (2017) kilonova
+    grid DOI:10.1038/nature24453
+    """
+    def __init__(self, *args, **kwargs):
+        """Model initial using predefined :class:`TimeSeriesSource`.
+
+        Parameters
+        ----------
+        *args
+            argument list passed to :meth:`Lightcurve.__init__`
+            First argument is the `source` variable. Defaults to
+            best-fit AT2017gfo fit by Dhawan et. al. (2020).
+        **kwargs
+            keyword arguments passed to :meth:`Lightcurve.__init__`
+        """
+        try:
+            source, *args = args
+        except ValueError:
+            source = kasen_at2017gfo_source
             args = (-15.7, 0.01, 0., coordinates.SkyCoord(
                 '02:42:40.771', '-00:00:47.84', unit=(u.hour, u.deg)))
             kwargs = dict(ebv=0., delta_t_minus=-2., delta_t_plus=12.)

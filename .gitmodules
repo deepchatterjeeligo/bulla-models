@@ -2,3 +2,6 @@
 	path = kilonova_models
 	url = https://github.com/mbulla/kilonova_models.git
 	branch = master
+[submodule "Kasen_Kilonova_Models_2017"]
+	path = Kasen_Kilonova_Models_2017
+	url = git@github.com:dnkasen/Kasen_Kilonova_Models_2017.git
