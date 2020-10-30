@@ -20,7 +20,6 @@ def extract_data():
                                  os.path.basename(filename)).groups()
         temp = ""
 
-
     # header
     with open(args.input) as f:
         header = [next(f) for _ in range(3)]  # FIXME: assume top 3 lines
@@ -43,7 +42,8 @@ def extract_data():
 
     cos_thetas = np.linspace(0, 1, n_obs)
     for idx, cos_theta in enumerate(cos_thetas):
-        fname = config.OUTPUT_SED_FILENAME.format(cos_theta, mej, phi, temp) if temp\
+        fname = config.OUTPUT_SED_FILENAME.format(cos_theta, mej, phi, temp) \
+            if temp \
             else config.OUTPUT_SED_FILENAME_NO_T.format(cos_theta, mej, phi)
         sed_cos_theta = data[idx * n_wave: (idx + 1) * n_wave]
         if not args.snana_sed_format:
