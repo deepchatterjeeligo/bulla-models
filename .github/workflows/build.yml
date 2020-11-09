@@ -25,4 +25,4 @@ jobs:
           - name: Lint
             run: |
               pip install flake8
-              flake8 . --show-source --exclude kn_cosmo/config.py
+              flake8 ./kn_cosmo --show-source --exclude kn_cosmo/config.py
