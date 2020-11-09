@@ -13,12 +13,24 @@ def extract_data():
     args = _get_args_for_extract_data()
     filename = pkg_resources.resource_filename(__name__, args.input)
     try:
-        nph, mej, phi, temp = re.match(config.FILENAME_PATTERN,  # noqa: F821
-                                       os.path.basename(filename)).groups()
+        nph, mej, phi, temp = re.match(
+            config.FILENAME_PATTERN,  # noqa: F821
+            os.path.basename(filename)
+        ).groups()
     except AttributeError:
-        nph, mej, phi = re.match(config.FILENAME_PATTERN_NO_T,  # noqa: F821
-                                 os.path.basename(filename)).groups()
-        temp = ""
+        try:
+            nph, mej, phi = re.match(
+                config.FILENAME_PATTERN_NO_T,  # noqa: F821
+                os.path.basename(filename)
+            ).groups()
+            temp = ""
+        except AttributeError:
+            nph, mejdyn, mejwind, phi = re.match(
+                config.FILENAME_PATTERN_BHNS,  # noqa: F821
+                os.path.basename(filename)
+            ).groups()
+            mej = (mejdyn, mejwind)
+            temp = ""
 
     # header
     with open(args.input) as f:
@@ -42,9 +54,15 @@ def extract_data():
 
     cos_thetas = np.linspace(0, 1, n_obs)
     for idx, cos_theta in enumerate(cos_thetas):
-        fname = config.OUTPUT_SED_FILENAME.format(cos_theta, mej, phi, temp) \
-            if temp \
-            else config.OUTPUT_SED_FILENAME_NO_T.format(cos_theta, mej, phi)
+        if temp:
+            fname = config.OUTPUT_SED_FILENAME.format(cos_theta, mej, phi,
+                                                      temp)
+        else:
+            fname = config.OUTPUT_SED_FILENAME_BHNS.format(
+                cos_theta, *mej, phi
+            ) if isinstance(mej, tuple) else \
+                config.OUTPUT_SED_FILENAME_NO_T.format(cos_theta, mej, phi)
+
         sed_cos_theta = data[idx * n_wave: (idx + 1) * n_wave]
         if not args.snana_sed_format:
             np.savetxt(os.path.join(outdir, fname), sed_cos_theta)
