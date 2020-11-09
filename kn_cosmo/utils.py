@@ -12,6 +12,8 @@ from . import config
 def extract_data():
     args = _get_args_for_extract_data()
     filename = pkg_resources.resource_filename(__name__, args.input)
+    if args.verbose:
+        print(f"Extracting {filename}")
     try:
         nph, mej, phi, temp = re.match(
             config.FILENAME_PATTERN,  # noqa: F821
