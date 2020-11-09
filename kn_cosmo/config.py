@@ -1,7 +1,7 @@
 import re
 
-FILENAME_REGEXP = r"nph(.*)_mej(.*)_phi(.*)_T(.*)\.txt"
-FILENAME_REGEXP_NO_T = r"nph(.*)_mej(.*)_phi(.*)\.txt"
+FILENAME_REGEXP = r"nph(.*)_mej([0-9]+.*)_phi(.*)_T(.*)\.txt"
+FILENAME_REGEXP_NO_T = r"nph(.*)_mej([0-9]+.*)_phi(.*)\.txt"
 FILENAME_REGEXP_BHNS = r"nph(.*)_mejdyn(.*)_mejwind(.*)_phi(.*).txt"
 FILENAME_PATTERN = re.compile(FILENAME_REGEXP)
 FILENAME_PATTERN_NO_T = re.compile(FILENAME_REGEXP_NO_T)
